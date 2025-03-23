@@ -6,7 +6,7 @@ from datetime import datetime
 # Future use and formatting of other file formats.
 def Reader(filename, format='txt') -> str:
     try:
-        with open(filename+'.'+format, 'r') as file:
+        with open(filename+'.'+format, 'r', encoding= 'utf-8') as file:
             lines = file.readlines()
             return lines
     except FileNotFoundError:
@@ -15,14 +15,14 @@ def Reader(filename, format='txt') -> str:
 
 # Defining the data formatting function.
 # think of a way to add formatting options, default will be tab separated values.
-def Format(lines, fotmat_delimeter='\t', reversed=False)-> str:
+def Format(lines, format_delimiter='\t', reversed=False)-> str:
     rows = []
     for line in lines:
         if not reversed:
-            line = line.strip().split(fotmat_delimeter)
+            line = line.strip().split(format_delimiter)
             rows.append(line)
         else:
-            rows.append(line.strip().split(fotmat_delimeter)[::-1])
+            rows.append(line.strip().split(format_delimiter)[::-1])
     return rows
 
 
@@ -31,7 +31,7 @@ def Format(lines, fotmat_delimeter='\t', reversed=False)-> str:
 # The output file name accepts args and defaults to output + current date.
 def Converter(rows, outputFilename=f'output {datetime.now().strftime('%d-%m-%Y %H-%M_%p')}') -> None:
     # Think of a way to define the output file.
-    with open(outputFilename+'.csv', 'w', newline="") as output_file:
+    with open(outputFilename+'.csv', 'w', encoding='utf-8',newline="") as output_file:
         writer = csv.writer(output_file, delimiter=",")
         writer.writerows(rows)
         print('Successfully converted txt -> csv')
@@ -69,7 +69,7 @@ def main ():
         case ('2' | "comma separated values"):
             rows = Format(lines, ',')
         case ('3' | "space separated values"):
-            rows = Format(lines, '\S')
+            rows = Format(lines, '\s')
         case (_):
             rows = Format(lines)
             Converter(rows)
